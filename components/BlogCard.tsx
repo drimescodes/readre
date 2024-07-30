@@ -13,7 +13,7 @@ interface BlogCardProps {
 const BlogCard = ({ title, slug, category, date, readTime }: BlogCardProps) => {
   return (
     <Link href={`/blogs/${slug}`} passHref>
-      <section className="w-[23rem] h-[23rem] sm:w-[26rem] sm:h-[26rem] bg-readreblack-2 p-3 rounded-md relative group overflow-hidden cursor-pointer">
+      <section className="w-[21rem] h-[23rem] sm:w-[26rem] sm:h-[26rem] bg-readreblack-2 p-3 rounded-md relative group overflow-hidden cursor-pointer">
         <div className="overflow-hidden rounded-md">
           <Image
             src={samurai}
@@ -22,7 +22,7 @@ const BlogCard = ({ title, slug, category, date, readTime }: BlogCardProps) => {
           />
         </div>
         <div>
-          <span className="border-[1.5px] border-readrepurple-5 absolute sm:top-[16rem] top-[14.5rem] left-0 h-10"></span>
+          <span className="border-[1.5px] border-readrepurple-5 absolute sm:top-[16rem] top-[13.4rem] left-0 h-10"></span>
           <p className="pt-8 text-readrepurple-5 font-semibold">{category}</p>
         </div>
         <p className="pt-4 font-bold text-lg">{title}</p>
