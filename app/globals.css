@@ -74,8 +74,36 @@
 
 
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 2px;
+    margin-right: 6px;
+  }
 
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #e3e4e6;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #9333ea;
+    border-radius: 100vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9333ea;
+  }
+}
 
 textarea {
   color: #000;
+  margin-left: 1rem;
+  padding: 1rem;
+  
+}
+
+textarea:focus {
+  outline: none;
+  
 }

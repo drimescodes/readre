@@ -14,7 +14,7 @@ const BlogPost = async ({ params }: BlogPostProps) => {
   const postData = { slug };
 
   return (
-    <section className='bg-readreblack-1 text-white'>
+    <section className='bg-readreblack-1 text-white '>
       <ClientBlogPost slug={postData.slug} />
       
     </section>

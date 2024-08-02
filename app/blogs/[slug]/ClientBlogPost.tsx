@@ -1,4 +1,3 @@
-// app/blogs/[slug]/ClientBlogPost.tsx
 "use client";
 
 import { useState } from 'react';
@@ -15,24 +14,20 @@ const ClientBlogPost = ({ slug }: ClientBlogPostProps) => {
       id: 1,
       text: 'Great post!',
       author: 'Alice',
-      replies: [
-        { id: 3, text: 'Yeah!', author: 'Bob', liked: false }
-      ],
       liked: false,
     },
     {
       id: 2,
       text: 'Thanks for sharing!',
       author: 'Bob',
-      replies: [],
       liked: false,
     },
   ]);
-  
+
   const [newCommentText, setNewCommentText] = useState('');
 
   const handleAddComment = () => {
-    setComments([...comments, { id: comments.length + 1, text: newCommentText, author: 'You', replies: [], liked: false }]);
+    setComments([...comments, { id: comments.length + 1, text: newCommentText, author: 'You', liked: false }]);
     setNewCommentText('');
   };
 
@@ -44,55 +39,42 @@ const ClientBlogPost = ({ slug }: ClientBlogPostProps) => {
     setComments(comments.map(comment => comment.id === id ? { ...comment, text } : comment));
   };
 
-  const handleReplyComment = (parentId: number, text: string) => {
-    setComments(comments.map(comment => 
-      comment.id === parentId 
-        ? {
-            ...comment,
-            replies: [...comment.replies, { id: Date.now(), text, author: 'You', liked: false }]
-          } 
-        : comment
-    ));
-  };
-
   const handleLikeComment = (id: number) => {
     setComments(comments.map(comment => comment.id === id ? { ...comment, liked: !comment.liked } : comment));
   };
 
   return (
-    <div>
+    <section className=' min-h-svh  max-w-svw bg-readreblack-1 '>
       <h1>{slug}</h1>
       <p>Hey 2 2 1 2</p>
       <LikeButton />
-      <div>
-        <h2 className='pt-8'>Comments</h2>
+      <div className='  h-[40%] bg-readreblack-1'>
+      <div className="flex items-center justify-center gap-4 py-6">
+        <div className="border-b-2 border-b-readreblack-4 flex-1"></div>
+        <p className="sm:px-10 text-center sm:text-3xl text-xl font-bold flex-nowrap">Comments</p>
+        <div className="border-b-2 border-b-readreblack-4 flex-1"></div>
+      </div>
+
+      <section className='bg-readreblack-6 flex flex-col bg-opacity-20'>
         {comments.map(comment => (
-  <Comment
-    key={comment.id}
-    {...comment}
-    onDelete={handleDeleteComment}
-    onEdit={handleEditComment}
-    onReply={handleReplyComment}
-    onLike={handleLikeComment}
-    replies={comment.replies.map(reply => ({
-      ...reply,
-      onDelete: handleDeleteComment,
-      onEdit: handleEditComment,
-      onReply: handleReplyComment,
-      onLike: handleLikeComment,
-      replies: [], // Replies don't have their own replies
-    }))}
-  />
-))}
+          <Comment
+            key={comment.id}
+            {...comment}
+            onDelete={handleDeleteComment}
+            onEdit={handleEditComment}
+            onLike={handleLikeComment}
+          />
+        ))}
         <textarea
           value={newCommentText}
           onChange={(e) => setNewCommentText(e.target.value)}
           placeholder="Add a comment"
-          className="w-full"
+          className="w-[60%]"
         />
-        <button onClick={handleAddComment}>Comment</button>
+        <button onClick={handleAddComment} className='py-3 px-6 ml-4 my-4 w-64 bg-readrepurple-5 rounded-md'>Comment</button>
+        </section>
       </div>
-    </div>
+    </section>
   );
 };
 
