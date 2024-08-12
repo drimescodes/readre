@@ -1,6 +1,5 @@
-// app/blogs/[slug]/page.tsx
+import axios from 'axios';
 import ClientBlogPost from './ClientBlogPost';
-
 
 interface BlogPostProps {
   params: { slug: string };
@@ -9,25 +8,39 @@ interface BlogPostProps {
 const BlogPost = async ({ params }: BlogPostProps) => {
   const { slug } = params;
 
-  // Fetch blog post data based on the slug
-  // This is where you'd fetch your actual data. For now, we'll just return the slug.
-  const postData = { slug };
+  try {
+    const response = await axios.get(`http://127.0.0.1:8000/blogs/${slug}`);
+    const postData = response.data;
 
-  return (
-    <section className='bg-readreblack-1 text-white '>
-      <ClientBlogPost slug={postData.slug} />
-      
-    </section>
-  );
+    return (
+      <section className='bg-readreblack-1 text-white '>
+        <div dangerouslySetInnerHTML={{ __html: postData.description }} />
+        <ClientBlogPost slug={postData.title} />
+        
+        {/* Render other postData fields if necessary */}
+      </section>
+    );
+  } catch (error) {
+    console.error('Error fetching blog post:', error);
+    return <p>Error loading blog post.</p>;
+  }
 };
 
+
+
+
+
 export async function generateStaticParams() {
-  // Fetch all available slugs from your data source
-  const slugs = ['animes-impact-on-cracked-devs', "wondering-if-you'd-ever-be-cracked?"]; // Example slugs
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/blogs');
+    const blogs = response.data;
 
-  return slugs.map(slug => ({
-    slug,
-  }));
+    return blogs.map((blog: { id: number, title: string }) => ({
+      slug: blog.id.toString(),
+    }));
+  } catch (error) {
+    console.error('Error fetching blog slugs:', error);
+    return [];
+  }
 }
-
 export default BlogPost;
