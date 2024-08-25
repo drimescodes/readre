@@ -151,3 +151,9 @@ textarea:focus {
   /* for dropdown */
   color: #444 !important;
 }
+
+
+
+.ql-action::after, .ql-active, .ql-toolbar button:hover, .ql-picker-label svg:hover,.ql-active svg:active{
+  color: #9333ea !important;
+}

@@ -37,17 +37,30 @@ const CreateBlog = () => {
 
     try {
       await axios.post("http://127.0.0.1:8000/blogs", {
-        title,
-        description: trimmedDescription, // Use the sanitized description
-        tag,
-        members_only: membersOnly,
+          title,
+          description: trimmedDescription,
+          tag,
+          members_only: membersOnly,
       });
-
-      // Navigate to the /welcome page on success
+  
       router.push("/welcome");
-    } catch (err) {
-      setError("Failed to create blog. Please try again.");
-    }
+  } catch (err) {
+    console.log("err", err);
+    
+      if (axios.isAxiosError(err) && err.response) {
+          const status = err.response.status;
+          if (status === 400) {
+              setError("Bad request: " + (err.response.data.detail || "Invalid data"));
+          } else if (status === 500) {
+              setError("Server error: Please try again later.");
+          } else {
+              setError("Unexpected error: " + (err.response.data.detail || "Please try again."));
+          }
+      } else {
+          setError("Failed to create blog. Please try again.");
+      }
+  }
+  
   };
 
   console.log("desc", description);
@@ -99,7 +112,7 @@ const CreateBlog = () => {
               </SelectTrigger>
               <SelectContent className="bg-readreblack-4 font-semibold text-xl">
                 <SelectItem value="GENERAL">General</SelectItem>
-                <SelectItem value="Technology">Technology</SelectItem>
+                <SelectItem value="TECHNOLOGY">Technology</SelectItem>
                 <SelectItem value="LIFESTYLE">Lifestyle</SelectItem>
               </SelectContent>
             </Select>

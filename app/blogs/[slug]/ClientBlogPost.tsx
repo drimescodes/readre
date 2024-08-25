@@ -5,10 +5,11 @@ import Comment from '@/components/Comment';
 import LikeButton from '@/components/LikeButton';
 
 interface ClientBlogPostProps {
-  slug: string;
+  content: string;
 }
 
-const ClientBlogPost = ({ slug }: ClientBlogPostProps) => {
+
+const ClientBlogPost = ({ content }: ClientBlogPostProps) => {
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -43,38 +44,40 @@ const ClientBlogPost = ({ slug }: ClientBlogPostProps) => {
     setComments(comments.map(comment => comment.id === id ? { ...comment, liked: !comment.liked } : comment));
   };
 
-  return (
-    <section className=' min-h-svh  max-w-svw bg-readreblack-1 '>
-      <h1>{slug}</h1>
-      <p>Hey 2 2 1 2</p>
+   return (
+    <article className='min-h-svh max-w-svw bg-readreblack-1'>
+      <div dangerouslySetInnerHTML={{ __html: content }} className="leading-relaxed" />
+      
       <LikeButton />
-      <div className='  h-[40%] bg-readreblack-1'>
-      <div className="flex items-center justify-center gap-4 py-6">
-        <div className="border-b-2 border-b-readreblack-4 flex-1"></div>
-        <p className="sm:px-10 text-center sm:text-3xl text-xl font-bold flex-nowrap">Comments</p>
-        <div className="border-b-2 border-b-readreblack-4 flex-1"></div>
-      </div>
+      
+      {/* Comments Section */}
+      <div className="h-[40%] bg-readreblack-1">
+        <div className="flex items-center justify-center gap-4 py-6">
+          <div className="border-b-2 border-b-readreblack-4 flex-1"></div>
+          <p className="sm:px-10 text-center sm:text-3xl text-xl font-bold flex-nowrap">Comments</p>
+          <div className="border-b-2 border-b-readreblack-4 flex-1"></div>
+        </div>
 
-      <section className='bg-readreblack-6 flex flex-col bg-opacity-20'>
-        {comments.map(comment => (
-          <Comment
-            key={comment.id}
-            {...comment}
-            onDelete={handleDeleteComment}
-            onEdit={handleEditComment}
-            onLike={handleLikeComment}
+        <section className='bg-readreblack-6 flex flex-col bg-opacity-20'>
+          {comments.map(comment => (
+            <Comment
+              key={comment.id}
+              {...comment}
+              onDelete={handleDeleteComment}
+              onEdit={handleEditComment}
+              onLike={handleLikeComment}
+            />
+          ))}
+          <textarea
+            value={newCommentText}
+            onChange={(e) => setNewCommentText(e.target.value)}
+            placeholder="Add a comment"
+            className="w-[60%]"
           />
-        ))}
-        <textarea
-          value={newCommentText}
-          onChange={(e) => setNewCommentText(e.target.value)}
-          placeholder="Add a comment"
-          className="w-[60%]"
-        />
-        <button onClick={handleAddComment} className='py-3 px-6 ml-4 my-4 w-64 bg-readrepurple-5 rounded-md'>Comment</button>
+          <button onClick={handleAddComment} className='py-3 px-6 ml-4 my-4 w-64 bg-readrepurple-5 rounded-md'>Comment</button>
         </section>
       </div>
-    </section>
+    </article>
   );
 };
 

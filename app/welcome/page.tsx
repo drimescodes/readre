@@ -20,7 +20,7 @@ const page = async () => {
             <BlogCard 
               key={index}
               title={blog.title}
-              slug={blog.id.toString()}
+              slug={blog.slug}
               category={blog.tag}
               date={new Date(blog.date_added).toLocaleDateString()}
               readTime={`${blog.reading_time} min read`}
