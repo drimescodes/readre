@@ -16,16 +16,17 @@ const page = async () => {
         </div>
 
         <section className="pt-6 grid place-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogs.map((blog: any, index: number) => (
-            <BlogCard 
-              key={index}
-              title={blog.title}
-              slug={blog.slug}
-              category={blog.tag}
-              date={new Date(blog.date_added).toLocaleDateString()}
-              readTime={`${blog.reading_time} min read`}
-            />
-          ))}
+        {blogs.map((blog: any, index: number) => (
+    <BlogCard 
+        key={index}
+        title={blog.title}
+        slug={blog.slug}
+        category={blog.tag}
+        date={new Date(blog.date_added).toLocaleDateString()}
+        readTime={`${blog.reading_time} min read`}
+        imageUrl={blog.image}  // Pass the image URL
+    />
+))}
         </section>
 
         <button className="border border-readrepurple-5 flex mx-auto p-3 my-6 rounded-md text-readrepurple-5 hover:bg-readrepurple-5 hover:text-white">
