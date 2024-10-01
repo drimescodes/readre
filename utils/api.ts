@@ -1,0 +1,11 @@
+export function getApiUrl() {
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return process.env.NEXT_PUBLIC_API_URL;
+    }
+    
+    if (process.env.NODE_ENV === 'production') {
+      return 'https://api.yourproductionsite.com';
+    }
+    
+    return 'http://localhost:8000';
+  }

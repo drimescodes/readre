@@ -45,38 +45,40 @@ const CreateBlog = () => {
   };
 
   console.log(image);
+  const cloudinaryAxios = axios.create({
+    baseURL: 'https://api.cloudinary.com/v1_1/domxafi8k',
+    withCredentials: false, // Ensure no credentials are sent
+  });
+  
+  // Do not add Authorization header to Cloudinary requests
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     const trimmedDescription = description.trim();
-
     if (!trimmedDescription) {
       setError("Content cannot be empty.");
       return;
     }
-
+  
     if (!image && !uploadedImageUrl) {
       setError("Please upload an image.");
       return;
     }
-
+  
     try {
       let imageUrl = uploadedImageUrl;
-
+  
       if (imageName && !uploadedImageUrl) {
-        // Upload the image to Cloudinary only if it hasn't been uploaded yet
+        // Upload the image to Cloudinary using the new Axios instance
         const formData = new FormData();
         formData.append("file", image);
         formData.append("upload_preset", "next-blog");
-
-        const cloudinaryResponse = await axios.post(
-          "https://api.cloudinary.com/v1_1/domxafi8k/image/upload",
-          formData
-        );
+  
+        const cloudinaryResponse = await cloudinaryAxios.post('/image/upload', formData);
         imageUrl = cloudinaryResponse.data.secure_url;
         setUploadedImageUrl(imageUrl);
       }
-
+  
       // Payload to send to the backend
       const payload = {
         title,
@@ -85,26 +87,20 @@ const CreateBlog = () => {
         members_only: membersOnly,
         image: imageUrl,
       };
-
-      // Create the blog post with the image URL
+  
+      // Create the blog post with the image URL using the default Axios instance
       await axios.post("http://127.0.0.1:8000/blogs", payload);
       router.push("/welcome");
     } catch (err) {
       console.error("Error creating blog:", err);
-
       if (axios.isAxiosError(err) && err.response) {
         const status = err.response.status;
         if (status === 400) {
-          setError(
-            "Bad request: " + (err.response.data.detail || "Invalid data")
-          );
+          setError("Bad request: " + (err.response.data.detail || "Invalid data"));
         } else if (status === 500) {
           setError("Server error: Please try again later.");
         } else {
-          setError(
-            "Unexpected error: " +
-              (err.response.data.detail || "Please try again.")
-          );
+          setError("Unexpected error: " + (err.response.data.detail || "Please try again."));
         }
       } else {
         setError("Failed to create blog. Please try again.");

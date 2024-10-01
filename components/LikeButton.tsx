@@ -1,16 +1,19 @@
+import { FaHeart } from "react-icons/fa";
 
-import { useState } from 'react';
+interface LikeButtonProps {
+  isLiked: boolean;
+  likeCount: number;
+  onLike: () => void;
+}
 
-const LikeButton = () => {
-  const [likes, setLikes] = useState(0);
-
-  const handleLike = () => {
-    setLikes(likes + 1);
-  };
-
+const LikeButton: React.FC<LikeButtonProps> = ({ isLiked, likeCount, onLike }) => {
   return (
-    <button onClick={handleLike}>
-      Like ({likes})
+    <button 
+      onClick={onLike} 
+      className="flex items-center space-x-2 text-readrepurple-5 hover:text-readrepurple-6 transition-colors"
+    >
+      <FaHeart className={isLiked ? "text-red-500" : ""} />
+      <span>{likeCount} {likeCount === 1 ? 'Like' : 'Likes'}</span>
     </button>
   );
 };
