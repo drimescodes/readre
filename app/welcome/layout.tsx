@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 
 const BlogLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <section className="bg-readreblack-1 text-white ">
+    <section className="bg-readreblack-1 text-white min-h-svh">
       <Navbar />
       
       {children}

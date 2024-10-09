@@ -126,7 +126,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
 
   return (
     <article className='min-h-screen bg-readreblack-1 text-white p-6'>
-      <div dangerouslySetInnerHTML={{ __html: content }} className="leading-relaxed mb-8" />
+      <div dangerouslySetInnerHTML={{ __html: content }} className="leading-relaxed mb-8 rendered-text" />
       
       <LikeButton isLiked={isLiked} likeCount={likeCount} onLike={handleLikeBlog} />
       
@@ -146,7 +146,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
             onDelete={handleDeleteComment}
             onEdit={handleEditComment}
             onLike={handleLikeComment}
-            isOwnComment={isAuthenticated && user?.id === comment.user_id}
+            isOwnComment={isAuthenticated && Number(user?.id) === comment.user_id}
           />
         ))}
         <div className="mt-8">

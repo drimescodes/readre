@@ -4,7 +4,7 @@ export function getApiUrl() {
     }
     
     if (process.env.NODE_ENV === 'production') {
-      return 'https://api.yourproductionsite.com';
+      return 'https://readre-backend.vercel.app';
     }
     
     return 'http://localhost:8000';

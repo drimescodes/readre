@@ -1,17 +1,39 @@
-
 import Image from 'next/image';
+import React from 'react';
 
 interface BlogPostPreviewProps {
   title: string;
   content: string;
   tag: string;
   image: File | null;
+  cloudinaryUrl?: string | null;
 }
-import React from 'react';
 
+const BlogPostPreview: React.FC<BlogPostPreviewProps> = ({ 
+  title, 
+  content, 
+  tag, 
+  image,
+  cloudinaryUrl 
+}) => {
+  const currentDate = new Date().toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  
+  // Determine which image source to use
+  const getImageSrc = () => {
+    if (image) {
+      return URL.createObjectURL(image);
+    }
+    if (cloudinaryUrl) {
+      return cloudinaryUrl;
+    }
+    return null;
+  };
 
-const BlogPostPreview:React.FC<BlogPostPreviewProps> = ({ title, content, tag, image }) => {
-  const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const imageSrc = getImageSrc();
   
   return (
     <div className="bg-readreblack-1 text-white">
@@ -27,9 +49,9 @@ const BlogPostPreview:React.FC<BlogPostPreviewProps> = ({ title, content, tag, i
         {/* Image */}
         <div className="col-span-1 md:col-span-3 my-6">
           <div className="relative w-full h-[400px]"> 
-            {image && (
+            {imageSrc && (
               <Image 
-                src={URL.createObjectURL(image)}
+                src={imageSrc}
                 alt={title} 
                 layout="fill"
                 objectFit="cover"
@@ -41,7 +63,7 @@ const BlogPostPreview:React.FC<BlogPostPreviewProps> = ({ title, content, tag, i
 
         {/* Blog Post Content */}
         <div className="col-span-1 md:col-span-2">
-          <div dangerouslySetInnerHTML={{ __html: content }} className="prose prose-invert max-w-none" />
+          <div dangerouslySetInnerHTML={{ __html: content }} className="prose prose-invert max-w-none rendered-text" />
         </div>
 
         {/* Sidebar (simplified) */}

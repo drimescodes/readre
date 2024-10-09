@@ -157,3 +157,10 @@ textarea:focus {
 .ql-action::after, .ql-active, .ql-toolbar button:hover, .ql-picker-label svg:hover,.ql-active svg:active{
   color: #9333ea !important;
 }
+
+
+.rendered-text a {
+  color:#9333ea ;
+  text-decoration: underline;
+  cursor: pointer;
+} 

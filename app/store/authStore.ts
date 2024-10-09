@@ -1,5 +1,9 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import { getApiUrl } from '@/utils/api';
+
+
+const API_BASE_URL = getApiUrl();
 
 interface User {
   id: string;
@@ -11,110 +15,88 @@ interface User {
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  accessToken: string | null;
-  isRefreshing: boolean;
+  isLoading: boolean;
   login: (token: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshToken: () => Promise<boolean>;
+  checkAuth: () => Promise<boolean>;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
-  accessToken: null,
-  isRefreshing: false,
+  isLoading: true,
+
+  checkAuth: async () => {
+    try {
+      const response = await axios.get('/auth/me');
+      set({ 
+        user: response.data, 
+        isAuthenticated: true,
+        isLoading: false
+      });
+      return true;
+    } catch (error) {
+      set({ 
+        user: null, 
+        isAuthenticated: false,
+        isLoading: false 
+      });
+      return false;
+    }
+  },
+
   login: async (token: string) => {
     try {
       const response = await axios.post('/auth/google', { token });
       set({ 
         user: response.data.user, 
         isAuthenticated: true,
-        accessToken: response.data.access_token,
+        isLoading: false
       });
     } catch (error) {
-      console.error('Login failed:', error);
+      set({ 
+        user: null, 
+        isAuthenticated: false,
+        isLoading: false 
+      });
       throw error;
     }
   },
-  initAuth: async () => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      try {
-        const response = await axios.get('/auth/me', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        set({ 
-          user: response.data.user, 
-          isAuthenticated: true,
-          accessToken: token,
-        });
-      } catch (error) {
-        console.error('Failed to initialize auth:', error);
-        set({ user: null, isAuthenticated: false, accessToken: null });
-      }
-    }
-  },
-  
+
   logout: async () => {
     try {
       await axios.post('/auth/logout');
-      set({ user: null, isAuthenticated: false, accessToken: null });
+      set({ 
+        user: null, 
+        isAuthenticated: false,
+        isLoading: false 
+      });
     } catch (error) {
       console.error('Logout failed:', error);
       throw error;
     }
   },
-  refreshToken: async () => {
-    if (get().isRefreshing) return false;
-    
-    set({ isRefreshing: true });
-    try {
-      const response = await axios.post('/auth/refresh');
-      set({ 
-        accessToken: response.data.access_token,
-        isAuthenticated: true,
-        user: response.data.user,
-        isRefreshing: false
-      });
-      return true;
-    } catch (error) {
-      console.error('Token refresh failed:', error);
-      set({ user: null, isAuthenticated: false, accessToken: null, isRefreshing: false });
-      return false;
-    }
-  },
 }));
 
+// Axios configuration
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = API_BASE_URL;
 
-// Axios interceptor to handle token expiration
+// Add axios interceptor for 401 responses
 axios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+  response => response,
+  async error => {
+    if (error.response?.status === 401) {
       const authStore = useAuthStore.getState();
-      const refreshSuccess = await authStore.refreshToken();
-      if (refreshSuccess) {
-        originalRequest.headers['Authorization'] = `Bearer ${authStore.accessToken}`;
-        return axios(originalRequest);
-      }
+      authStore.checkAuth().catch(() => {
+        // If checkAuth fails, we're truly unauthorized
+        useAuthStore.setState({ 
+          user: null, 
+          isAuthenticated: false,
+          isLoading: false
+        });
+      });
     }
-    return Promise.reject(error);
-  }
-);
-
-axios.interceptors.request.use(
-  (config) => {
-    const { accessToken } = useAuthStore.getState();
-    if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => {
     return Promise.reject(error);
   }
 );

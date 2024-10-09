@@ -1,5 +1,5 @@
-// admin/create_blog/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -13,73 +13,75 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Spinner from "@/components/Spinner";
+import { useToast } from "@/hooks/use-toast";
+import { getApiUrl } from "@/utils/api";
+import { withAuth } from "@/components/withAuth";
 
 const CreateBlog = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [tag, setTag] = useState("GENERAL");
+  const [tag, setTag] = useState("");
   const [membersOnly, setMembersOnly] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [imageName, setImageName] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  
   const router = useRouter();
+  const { toast } = useToast();
+  const API_BASE_URL = getApiUrl();
 
-  // useEffect(() => {
 
-  //   return () => {
-  //     second
-  //   }
-  // }, [third])
+ 
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (image) {
-      console.log("Hello!");
-      console.log(e.target.files);
-    }
     if (e.target.files) {
       setImage(e.target.files[0]);
       setImageName(e.target.files[0].name);
     }
   };
 
-  console.log(image);
   const cloudinaryAxios = axios.create({
-    baseURL: 'https://api.cloudinary.com/v1_1/domxafi8k',
-    withCredentials: false, // Ensure no credentials are sent
+    baseURL: "https://api.cloudinary.com/v1_1/domxafi8k",
+    withCredentials: false,
   });
-  
-  // Do not add Authorization header to Cloudinary requests
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+    setLoading(true);
+
     const trimmedDescription = description.trim();
     if (!trimmedDescription) {
       setError("Content cannot be empty.");
+      setLoading(false);
       return;
     }
-  
+
     if (!image && !uploadedImageUrl) {
       setError("Please upload an image.");
+      setLoading(false);
       return;
     }
-  
+
     try {
       let imageUrl = uploadedImageUrl;
-  
+
       if (imageName && !uploadedImageUrl) {
-        // Upload the image to Cloudinary using the new Axios instance
         const formData = new FormData();
-        formData.append("file", image);
+        formData.append("file", image as File);
         formData.append("upload_preset", "next-blog");
-  
-        const cloudinaryResponse = await cloudinaryAxios.post('/image/upload', formData);
+
+        const cloudinaryResponse = await cloudinaryAxios.post(
+          "/image/upload",
+          formData
+        );
         imageUrl = cloudinaryResponse.data.secure_url;
         setUploadedImageUrl(imageUrl);
       }
-  
-      // Payload to send to the backend
+
       const payload = {
         title,
         description: trimmedDescription,
@@ -87,24 +89,23 @@ const CreateBlog = () => {
         members_only: membersOnly,
         image: imageUrl,
       };
-  
-      // Create the blog post with the image URL using the default Axios instance
-      await axios.post("http://127.0.0.1:8000/blogs", payload);
-      router.push("/welcome");
+
+      await axios.post(`${API_BASE_URL}/blogs`, payload);
+      toast({
+        title: "Success",
+        description: "Blog created successfully",
+      });
+      router.push('/admin/manage-blogs');
     } catch (err) {
       console.error("Error creating blog:", err);
-      if (axios.isAxiosError(err) && err.response) {
-        const status = err.response.status;
-        if (status === 400) {
-          setError("Bad request: " + (err.response.data.detail || "Invalid data"));
-        } else if (status === 500) {
-          setError("Server error: Please try again later.");
-        } else {
-          setError("Unexpected error: " + (err.response.data.detail || "Please try again."));
-        }
-      } else {
-        setError("Failed to create blog. Please try again.");
-      }
+      setError("Failed to create blog. Please try again.");
+      toast({
+        title: "Error",
+        description: "Failed to create blog. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,17 +113,18 @@ const CreateBlog = () => {
     setIsPreviewMode(!isPreviewMode);
   };
 
+ 
   return (
-    <section className="bg-readreblack-1 min-h-screen p-4">
-      <Navbar />
-      <div className="container mx-auto mt-6">
-        <div className="flex justify-between">
-          <h1 className="text-3xl font-bold mb-6 text-readrepurple-5">
+    <>
+      
+      <div className=" mx-auto mt-6">
+        <div className="flex justify-between items-center">
+          <h1 className="sm:text-3xl text-lg font-bold mb-6 text-readrepurple-5">
             Create a New Blog
           </h1>
           <button
             onClick={togglePreviewMode}
-            className="mb-4 bg-readrepurple-5 hover:bg-readrepurple-4 text-white py-2 px-4 rounded"
+            className="mb-4 bg-readrepurple-5 hover:bg-readrepurple-4 text-white p-2 rounded max-w-32"
           >
             {isPreviewMode ? "Edit Mode" : "Preview Mode"}
           </button>
@@ -170,10 +172,20 @@ const CreateBlog = () => {
                 <SelectTrigger className="w-full p-2 rounded bg-readreblack-6 bg-opacity-20">
                   <SelectValue placeholder="Select a tag" />
                 </SelectTrigger>
-                <SelectContent className="bg-readreblack-4 font-semibold text-xl">
-                  <SelectItem value="GENERAL">General</SelectItem>
+                <SelectContent className="bg-readreblack-4 font-semibold text-xl h-72">
                   <SelectItem value="TECHNOLOGY">Technology</SelectItem>
-                  <SelectItem value="LIFESTYLE">Lifestyle</SelectItem>
+                  <SelectItem value="DATA SCIENCE">Data Science</SelectItem>
+                  <SelectItem value="AI / ML">AI / ML</SelectItem>
+                  <SelectItem value="WEB DEVELOPMENT">Web Development</SelectItem>
+                  <SelectItem value="MOBILE DEVELOPMENT">Mobile Development</SelectItem>
+                  <SelectItem value="CLOUD COMPUTING">Cloud Computing</SelectItem>
+                  <SelectItem value="DEVOPS">DevOps</SelectItem>
+                  <SelectItem value="CYBER SECURITY">Cyber Security</SelectItem>
+                  <SelectItem value="DATABASES">Databases</SelectItem>
+                  <SelectItem value="SOFTWARE ENGINEERING">Software Engineering</SelectItem>
+                  <SelectItem value="PROJECT MANAGEMENT">Project Management</SelectItem>
+                  <SelectItem value="STARTUPS">Startups</SelectItem>
+                  <SelectItem value="ENTREPRENEURSHIP">Entrepreneurship</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -194,36 +206,48 @@ const CreateBlog = () => {
               Yes
             </div>
             <div className="mb-4">
-  <label htmlFor="imageUpload" className="block text-sm font-bold mb-2">
-    Upload Image
-  </label>
-  <div className="relative cursor-pointer">
-    <input
-      id="imageUpload"
-      type="file"
-      onChange={handleImageUpload}
-      className="w-full p-2 rounded bg-readreblack-6 bg-opacity-20 opacity-0 absolute z-50 h-[100%] cursor-pointer"
-     
-    />
-    <div className="w-full p-2 rounded bg-readreblack-6 bg-opacity-20 text-white cursor-pointer">
-      {imageName ? `Selected file: ${imageName}` : 'Choose an image'}
-    </div>
-  </div>
-</div>
+              <label
+                htmlFor="imageUpload"
+                className="block text-sm font-bold mb-2"
+              >
+                Upload Image
+              </label>
+              <div className="relative cursor-pointer">
+                <input
+                  id="imageUpload"
+                  type="file"
+                  onChange={handleImageUpload}
+                  className="w-full p-2 rounded bg-readreblack-6 bg-opacity-20 opacity-0 absolute z-50 h-[100%] cursor-pointer"
+                />
+                <div className="w-full p-2 rounded bg-readreblack-6 bg-opacity-20 text-white cursor-pointer">
+                  {imageName
+                    ? `Selected file: ${imageName}`
+                    : "Choose an image"}
+                </div>
+              </div>
+            </div>
 
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="bg-readrepurple-5 bg-opacity-80 text-white py-2 px-4 rounded hover:bg-readrepurple-5"
+                className={`bg-readrepurple-5 bg-opacity-80 text-white p-2 w-32 rounded hover:bg-readrepurple-5 ${loading ? "cursor-not-allowed opacity-80 flex items-center gap-2" : ""}`}
+                disabled={loading}
               >
-                Create Blog
+                {loading ? (
+                  <>
+                    <span>Creating... </span>
+                    <Spinner />
+                  </>
+                ) : (
+                  "Create Blog"
+                )}
               </button>
             </div>
           </form>
         )}
       </div>
-    </section>
+    </>
   );
 };
 
-export default CreateBlog;
+export default withAuth(CreateBlog);
