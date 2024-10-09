@@ -1,10 +1,9 @@
 "use client";
-
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import Quill from "@/components/Quill";
+
 import BlogPostPreview from "./BlogPostPreview";
 import {
   Select,
@@ -17,6 +16,13 @@ import Spinner from "@/components/Spinner";
 import { useToast } from "@/hooks/use-toast";
 import { getApiUrl } from "@/utils/api";
 import { withAuth } from "@/components/withAuth";
+
+
+const Quill = dynamic(() => import("@/components/Quill"), {
+  ssr: false,
+  loading: () => <p>Loading editor...</p>
+});
+
 
 const CreateBlog = () => {
   const [title, setTitle] = useState("");
