@@ -5,6 +5,10 @@ import { getApiUrl } from '@/utils/api';
 
 const API_BASE_URL = getApiUrl();
 
+// Axios configuration
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = API_BASE_URL;
+
 interface User {
   id: string;
   name: string;
@@ -78,9 +82,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 }));
 
-// Axios configuration
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = API_BASE_URL;
 
 // Add axios interceptor for 401 responses
 axios.interceptors.response.use(

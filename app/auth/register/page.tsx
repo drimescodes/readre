@@ -23,9 +23,11 @@ const Register = () => {
         setLoading(false);
       }
     },
-    onError: (error) =>{
-    console.log('Login Failed:', error)
-    setLoading(false);}
+    onError: (error) => {
+      console.log('Login Failed:', error);
+      setLoading(false);
+    },
+    flow: 'implicit', // Add this line
   });
 
   return (
