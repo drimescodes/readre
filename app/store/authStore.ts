@@ -9,6 +9,13 @@ const API_BASE_URL = getApiUrl();
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_BASE_URL;
 
+// Add this to ensure cookies are always sent
+axios.interceptors.request.use(function (config) {
+  config.withCredentials = true;
+  return config;
+});
+
+
 interface User {
   id: string;
   name: string;
@@ -49,23 +56,26 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  login: async (token: string) => {
-    try {
-      const response = await axios.post('/auth/google', { token });
-      set({ 
-        user: response.data.user, 
-        isAuthenticated: true,
-        isLoading: false
-      });
-    } catch (error) {
-      set({ 
-        user: null, 
-        isAuthenticated: false,
-        isLoading: false 
-      });
-      throw error;
-    }
-  },
+ // Modify your login function to include a call to checkAuth
+login: async (token: string) => {
+  try {
+    const response = await axios.post('/auth/google', { token });
+    set({ 
+      user: response.data.user, 
+      isAuthenticated: true,
+      isLoading: false
+    });
+    // Add this line to check authentication immediately after login
+    await useAuthStore.getState().checkAuth();
+  } catch (error) {
+    set({ 
+      user: null, 
+      isAuthenticated: false,
+      isLoading: false 
+    });
+    throw error;
+  }
+},
 
   logout: async () => {
     try {
@@ -102,7 +112,3 @@ axios.interceptors.response.use(
   }
 );
 
-axios.interceptors.request.use(function (config) {
-  config.withCredentials = true;
-  return config;
-});
