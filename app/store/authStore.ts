@@ -101,3 +101,8 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+axios.interceptors.request.use(function (config) {
+  config.withCredentials = true;
+  return config;
+});
