@@ -5,6 +5,7 @@ import { useAuthStore } from '@/app/store/authStore';
 import Comment from '@/components/Comment';
 import LikeButton from '@/components/LikeButton';
 import { getApiUrl } from '@/utils/api';
+import { headers } from 'next/headers';
 
 interface ClientBlogPostProps {
   content: string;
@@ -28,7 +29,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
   const [newCommentText, setNewCommentText] = useState('');
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, accessToken} = useAuthStore();
 
   const API_BASE_URL = getApiUrl();
 
@@ -97,7 +98,11 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
       return;
     }
     try {
-      const response = await axios.post(`${API_BASE_URL}/blogs/${blogSlug}/comments/${id}/like`);
+      const response = await axios.post(`${API_BASE_URL}/blogs/${blogSlug}/comments/${id}/like`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}` 
+        }
+      });
       setComments(comments.map(comment => 
         comment.id === id 
           ? { ...comment, liked: response.data.liked, likes_count: response.data.likes_count } 
@@ -114,7 +119,11 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
       return;
     }
     try {
-      const response = await axios.post(`${API_BASE_URL}/blogs/${blogSlug}/like`);
+      const response = await axios.post(`${API_BASE_URL}/blogs/${blogSlug}/like`,{
+        headers: {
+          'Authorization': `Bearer ${accessToken}` 
+        }
+      });
       setIsLiked(response.data.liked);
       setLikeCount(response.data.likes_count);
     } catch (error) {

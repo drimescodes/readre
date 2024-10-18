@@ -16,6 +16,7 @@ import Spinner from "@/components/Spinner";
 import { useToast } from "@/hooks/use-toast";
 import { getApiUrl } from "@/utils/api";
 import { withAuth } from "@/components/withAuth";
+import { useAuthStore } from "@/app/store/authStore";
 
 
 const Quill = dynamic(() => import("@/components/Quill"), {
@@ -39,6 +40,8 @@ const CreateBlog = () => {
   const router = useRouter();
   const { toast } = useToast();
   const API_BASE_URL = getApiUrl();
+  const authStore = useAuthStore.getState();
+  const token = authStore.accessToken;
 
 
  
@@ -96,7 +99,11 @@ const CreateBlog = () => {
         image: imageUrl,
       };
 
-      await axios.post(`${API_BASE_URL}/blogs`, payload);
+      await axios.post(`${API_BASE_URL}/blogs`, payload, {
+        headers: {
+          'Authorization': `Bearer ${token}` // Make sure you have access to the accessToken
+        }
+      });
       toast({
         title: "Success",
         description: "Blog created successfully",

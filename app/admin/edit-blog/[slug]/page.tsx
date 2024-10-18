@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getApiUrl } from "@/utils/api";
 import { withAuth } from "@/components/withAuth";
 import { Blog } from "@/app/types/blog";
+import { useAuthStore } from "@/app/store/authStore";
 
 interface EditBlogProps {
   params: {
@@ -41,6 +42,8 @@ const EditBlog = ({ params }: EditBlogProps) => {
   const { toast } = useToast();
   const { slug } = params;
   const API_BASE_URL = getApiUrl();
+  const authStore = useAuthStore.getState();
+  const token = authStore.accessToken;
 
   useEffect(() => {
     fetchBlog();
@@ -114,7 +117,11 @@ const EditBlog = ({ params }: EditBlogProps) => {
         image: imageUrl,
       };
 
-      await axios.put(`${API_BASE_URL}/blogs/${slug}`, payload);
+      await axios.put(`${API_BASE_URL}/blogs/${slug}`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast({
         title: "Success",
         description: "Blog updated successfully",

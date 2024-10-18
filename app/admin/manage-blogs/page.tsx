@@ -28,6 +28,7 @@ import Spinner from "@/components/Spinner";
 import { Blog } from "@/app/types/blog";
 import { getApiUrl } from "@/utils/api";
 import { withAuth } from "@/components/withAuth";
+import { useAuthStore } from "@/app/store/authStore";
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -35,6 +36,7 @@ const ManageBlogs = () => {
   const router = useRouter();
   const { toast } = useToast();
   const API_BASE_URL = getApiUrl();
+  const {accessToken} = useAuthStore();
 
 useEffect(() => {
     fetchBlogs();
@@ -43,7 +45,11 @@ useEffect(() => {
 
   const fetchBlogs = async () => {
     try {
-        const response = await axios.get<Blog[]>(`${API_BASE_URL}/user/blogs`);
+        const response = await axios.get<Blog[]>(`${API_BASE_URL}/user/blogs`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}` // Make sure you have access to the accessToken
+          }
+        });
         setBlogs(response.data);
       } catch (error) {
         if (error instanceof AxiosError) {

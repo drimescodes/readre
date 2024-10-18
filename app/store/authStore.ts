@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { getApiUrl } from '@/utils/api';
 
-
 const API_BASE_URL = getApiUrl();
 
 // Axios configuration
@@ -15,7 +14,6 @@ axios.interceptors.request.use(function (config) {
   return config;
 });
 
-
 interface User {
   id: string;
   name: string;
@@ -27,6 +25,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  accessToken: string | null;
   login: (token: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
@@ -36,6 +35,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  accessToken: null,
 
   checkAuth: async () => {
     try {
@@ -57,15 +57,18 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
  // Modify your login function to include a call to checkAuth
-login: async (token: string) => {
+ login: async (token: string) => {
   try {
     const response = await axios.post('/auth/google', { token });
+    const { access_token, user } = response.data;
+    console.log('Received access token:', access_token);
     set({ 
-      user: response.data.user, 
+      user,
+      accessToken: access_token, // Save the access token
       isAuthenticated: true,
       isLoading: false
     });
-    // Add this line to check authentication immediately after login
+    // Check if the user is authenticated
     await useAuthStore.getState().checkAuth();
   } catch (error) {
     set({ 
@@ -92,7 +95,6 @@ login: async (token: string) => {
   },
 }));
 
-
 // Add axios interceptor for 401 responses
 axios.interceptors.response.use(
   response => response,
@@ -111,4 +113,3 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
