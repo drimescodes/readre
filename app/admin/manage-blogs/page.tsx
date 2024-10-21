@@ -85,14 +85,14 @@ useEffect(() => {
 
   if (pageLoading) {
     return (
-      <Spinner className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+      <Spinner className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-8 h-8 " />
     );
   }
 
 
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-white">Manage Your Blogs</h1>
       {blogs.length === 0 ? (
         <div className="text-center py-8">
@@ -107,7 +107,7 @@ useEffect(() => {
             <Card key={blog.id} className="bg-readreblack-2 border-readreblack-4">
               <CardHeader>
                 <CardTitle className="line-clamp-2 text-readrepurple-5">{blog.title}</CardTitle>
-                <CardDescription className="line-clamp-3">
+                <CardDescription className="line-clamp-2">
                   {/* {blog.description} */}
                   <p dangerouslySetInnerHTML={{ __html: blog.description }} className="leading-relaxed text-white rendered-text" />
       

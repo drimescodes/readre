@@ -1,30 +1,28 @@
-
-
-import axios from 'axios';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import ClientBlogPost from './ClientBlogPost';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { getApiUrl } from '@/utils/api';
 
-
-const API_BASE_URL = getApiUrl();
-async function getBlogPost(slug: string) {
-  try {
-    const res = await axios.get(`${API_BASE_URL}/blogs/${slug}`);
-    console.log('Fetched blog post:', res.data);
-    return res.data;
-  } catch (error) {
-    console.error('Error fetching blog post:', error);
-    return undefined;
-  }
+// Define all the types we need
+interface BlogPostData {
+  title: string;
+  description: string;
+  image: string;
+  author: string;
+  date_added: string;
+  tag: string;
+  reading_time: number;
 }
 
+interface BlogPostProps {
+  postData: BlogPostData;
+  params: {
+    slug: string;
+  };
+}
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const postData = await getBlogPost(params.slug);
-
+export default function BlogPost({ postData, params }: BlogPostProps) {
   if (!postData) {
     notFound();
   }
@@ -65,8 +63,17 @@ export default async function BlogPost({ params }: { params: { slug: string } })
           <section className="bg-readreblack-6 p-4 rounded-lg mb-6">
             <h2 className="text-xl font-bold mb-4">Subscribe To Our Newsletter</h2>
             <form>
-              <input type="email" placeholder="name@email.com" className="w-full p-2 rounded-lg mb-4 bg-readreblack-5" />
-              <button type="submit" className="w-full bg-readrepurple-5 p-2 rounded-lg">Subscribe</button>
+              <input 
+                type="email" 
+                placeholder="name@email.com" 
+                className="w-full p-2 rounded-lg mb-4 bg-readreblack-5" 
+              />
+              <button 
+                type="submit" 
+                className="w-full bg-readrepurple-5 p-2 rounded-lg"
+              >
+                Subscribe
+              </button>
             </form>
           </section>
 

@@ -55,9 +55,9 @@ const ProfilePopover: React.FC<ProfilePopoverProps> = ({ image }) => {
           <Button
             variant="ghost"
             className="justify-start"
-            onClick={() => router.push("/admin/create_blog")}
+            onClick={() => router.push("/blogs")}
           >
-            Profile
+            All Blogs
           </Button>
 
           <Button

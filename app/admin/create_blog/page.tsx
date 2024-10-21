@@ -249,7 +249,7 @@ const CreateBlog = () => {
                 {loading ? (
                   <>
                     <span>Creating... </span>
-                    <Spinner />
+                    <Spinner className="w-6 h-6" />
                   </>
                 ) : (
                   "Create Blog"

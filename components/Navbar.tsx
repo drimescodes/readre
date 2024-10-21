@@ -26,7 +26,7 @@ const Navbar = () => {
             <Link href="#" className="text-sm font-medium hover:text-readrepurple-5 transition-colors" prefetch={false}>
               Home
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-readrepurple-5 transition-colors" prefetch={false}>
+            <Link href="/blogs" className="text-sm font-medium hover:text-readrepurple-5 transition-colors" prefetch={false}>
               Blog
             </Link>
             <Link href="#" className="text-sm font-medium hover:text-readrepurple-5 transition-colors" prefetch={false}>

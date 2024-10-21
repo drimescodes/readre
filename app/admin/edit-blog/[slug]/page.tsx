@@ -145,7 +145,7 @@ const EditBlog = ({ params }: EditBlogProps) => {
   };
 
   if (pageLoading) {
-    return <Spinner className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />;
+    return <Spinner className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-8 h-8 " />;
   }
 
   return (
@@ -259,7 +259,7 @@ const EditBlog = ({ params }: EditBlogProps) => {
               {submitLoading ? (
                 <>
                   <span>Updating </span>
-                  <Spinner className=" w-1 "/>
+                  <Spinner className=" w-6 h-6 "/>
                 </>
               ) : (
                 "Update Blog"
