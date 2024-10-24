@@ -22,7 +22,7 @@ const page = () => {
                   Readre
                 </span>
               </h1>
-              <p className="mt-6 text-lg text-readreblack-6 max-w-3xl">
+              <p className="mt-6 text-lg text-[#D7D7D7] max-w-3xl">
                 Your thoughts deserve a beautiful space. Write, read, and connect 
                 with passionate writers and readers in a community that celebrates 
                 creativity and authentic voices.
