@@ -8,7 +8,7 @@ export default function AdminLayout({
   return (
     <section className="bg-readreblack-1 min-h-screen lg:p-4">
       <Navbar />
-      <div className="mx-auto mt-6">
+      <div className="mx-auto mt-6 ">
         {children}
       </div>
     </section>

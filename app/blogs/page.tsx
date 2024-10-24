@@ -32,7 +32,7 @@ const PublicBlogs = () => {
       <h1 className="text-3xl font-bold mb-8 text-center text-white pt-4">Explore Our Blog</h1>
       
       {/* Search Bar */}
-      <div className="max-w-xl mx-auto mb-8">
+      <div className="max-w-xl mx-auto mb-8 px-4">
         <input
           type="text"
           placeholder="Search blogs..."

@@ -150,13 +150,13 @@ const EditBlog = ({ params }: EditBlogProps) => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center p-3">
         <h1 className="sm:text-3xl text-lg font-bold mb-6 text-readrepurple-5">
           Edit Blog
         </h1>
         <button
           onClick={togglePreviewMode}
-          className="mb-4 bg-readrepurple-5 hover:bg-readrepurple-4 text-white p-2 rounded max-w-32"
+          className="mb-4 bg-readrepurple-5 hover:bg-readrepurple-4 text-white p-2 rounded max-w-32 "
         >
           {isPreviewMode ? "Edit Mode" : "Preview Mode"}
         </button>
@@ -172,7 +172,7 @@ const EditBlog = ({ params }: EditBlogProps) => {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="bg-readreblack-6 bg-opacity-20 text-white p-6 rounded shadow-md"
+          className="bg-readreblack-6 bg-opacity-20 text-white p-6 rounded shadow-md max-w-6xl mx-auto"
         >
           {error && <p className="text-red-500">{error}</p>}
           <div className="mb-4">
