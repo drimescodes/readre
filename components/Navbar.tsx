@@ -42,21 +42,21 @@ const Navbar = () => {
               Blog
             </Link>
             <Link
-              href="#"
+              href="/about"
               className="text-sm font-medium hover:text-readrepurple-5 transition-colors"
               prefetch={false}
             >
               About
             </Link>
-{!isAuthenticated &&
-
-            (<Link
-              href="/auth/register"
-              className="text-sm  bg-readrepurple-5 bg-opacity-80 hover:bg-readrepurple-5 font-bold rounded-md py-1 px-4 transition-colors"
-              prefetch={false}
-            >
-              Log In
-            </Link>)}
+            {!isAuthenticated && (
+              <Link
+                href="/auth/register"
+                className="text-sm  bg-readrepurple-5 bg-opacity-80 hover:bg-readrepurple-5 font-bold rounded-md py-1 px-4 transition-colors"
+                prefetch={false}
+              >
+                Log In
+              </Link>
+            )}
           </div>
 
           {/* Write Button (visible on both mobile and desktop when authenticated) */}
@@ -105,7 +105,7 @@ const Navbar = () => {
                     Blog
                   </Link>
                   <Link
-                    href="#"
+                    href="/about"
                     className="text-sm font-medium hover:text-readrepurple-5 transition-colors"
                     prefetch={false}
                   >
