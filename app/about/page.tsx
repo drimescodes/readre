@@ -107,11 +107,11 @@ const AboutPage = () => {
         <div className="mb-12 animate-fadeIn delay-600 text-center">
           <h2 className="text-2xl font-semibold mb-4">Acknowledgements</h2>
           <p className="text-readreblack-6 leading-relaxed">
-            I'm genuinely grateful to everyone who contributed to this project.
+            {`I'm genuinely grateful to everyone who contributed to this project.
             Special thanks to llms, my friends who provided valuable feedback
             and support throughout the process and lastly to the hundreds of
             songs that got me through this. This project wouldn't be where it is
-            without them.
+            without them.`}
           </p>
           <div className="mt-4 flex justify-center items-center gap-1 text-readrepurple-5">
             <span>Made with</span>
