@@ -60,6 +60,7 @@ const PublicBlogs = () => {
               key={blog.id}
               title={blog.title}
               slug={blog.slug}
+              author={blog.author}
               category={blog.tag}
               date={new Date(blog.date_added).toLocaleDateString()}
               readTime={`${blog.reading_time} min read`}

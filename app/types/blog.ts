@@ -3,6 +3,7 @@ export interface Blog {
     id: number;
     title: string;
     slug: string;
+    author?: string;
     description: string;
     tag: string;
     reading_time: number;

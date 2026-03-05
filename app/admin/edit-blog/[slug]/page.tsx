@@ -127,8 +127,7 @@ const EditBlog = ({ params }: EditBlogProps) => {
         description: "Blog updated successfully",
       });
       router.push('/admin/manage-blogs');
-    } catch (err) {
-      console.error("Error updating blog:", err);
+    } catch {
       setError("Failed to update blog. Please try again.");
       toast({
         title: "Error",

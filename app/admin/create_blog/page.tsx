@@ -109,8 +109,7 @@ const CreateBlog = () => {
         description: "Blog created successfully",
       });
       router.push('/admin/manage-blogs');
-    } catch (err) {
-      console.error("Error creating blog:", err);
+    } catch {
       setError("Failed to create blog. Please try again.");
       toast({
         title: "Error",

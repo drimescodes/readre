@@ -61,7 +61,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   try {
     const response = await axios.post('/auth/google', { token });
     const { access_token, user } = response.data;
-    console.log('Received access token:', access_token);
     set({ 
       user,
       accessToken: access_token, // Save the access token
@@ -89,7 +88,6 @@ export const useAuthStore = create<AuthState>((set) => ({
         isLoading: false 
       });
     } catch (error) {
-      console.error('Logout failed:', error);
       throw error;
     }
   },

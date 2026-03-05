@@ -13,18 +13,15 @@ const Register = () => {
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (codeResponse) => {
-      console.log('Google login success:', codeResponse);
       setLoading(true);
       try {
         await login(codeResponse.access_token);
         router.push('/welcome');
-      } catch (error) {
-        console.error('Error during backend authentication:', error);
+      } catch {
         setLoading(false);
       }
     },
-    onError: (error) => {
-      console.log('Login Failed:', error);
+    onError: () => {
       setLoading(false);
     },
     flow: 'implicit', // Add this line

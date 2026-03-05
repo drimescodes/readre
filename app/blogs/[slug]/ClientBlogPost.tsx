@@ -5,7 +5,6 @@ import { useAuthStore } from '@/app/store/authStore';
 import Comment from '@/components/Comment';
 import LikeButton from '@/components/LikeButton';
 import { getApiUrl } from '@/utils/api';
-import { headers } from 'next/headers';
 
 interface ClientBlogPostProps {
   content: string;
@@ -41,10 +40,8 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
   const fetchComments = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/blogs/${blogSlug}/comments`);
-      console.log('Fetched comments:', response.data);
       setComments(response.data);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
+    } catch {
     }
   };
 
@@ -54,8 +51,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
         const response = await axios.get(`${API_BASE_URL}/blogs/${blogSlug}/like`);
         setIsLiked(response.data.liked);
         setLikeCount(response.data.likes_count);
-      } catch (error) {
-        console.error('Error fetching like status:', error);
+      } catch {
       }
     }
   };
@@ -69,8 +65,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
       const response = await axios.post(`${API_BASE_URL}/blogs/${blogSlug}/comments`, { text: newCommentText });
       setComments([...comments, response.data]);
       setNewCommentText('');
-    } catch (error) {
-      console.error('Error adding comment:', error);
+    } catch {
     }
   };
 
@@ -78,8 +73,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
     try {
       await axios.delete(`${API_BASE_URL}/blogs/${blogSlug}/comments/${id}`);
       setComments(comments.filter(comment => comment.id !== id));
-    } catch (error) {
-      console.error('Error deleting comment:', error);
+    } catch {
     }
   };
 
@@ -87,8 +81,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
     try {
       const response = await axios.put(`${API_BASE_URL}/blogs/${blogSlug}/comments/${id}`, { text });
       setComments(comments.map(comment => comment.id === id ? response.data : comment));
-    } catch (error) {
-      console.error('Error editing comment:', error);
+    } catch {
     }
   };
 
@@ -108,8 +101,7 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
           ? { ...comment, liked: response.data.liked, likes_count: response.data.likes_count } 
           : comment
       ));
-    } catch (error) {
-      console.error('Error liking comment:', error);
+    } catch {
     }
   };
 
@@ -126,12 +118,9 @@ const ClientBlogPost: React.FC<ClientBlogPostProps> = ({ content, blogSlug }) =>
       });
       setIsLiked(response.data.liked);
       setLikeCount(response.data.likes_count);
-    } catch (error) {
-      console.error('Error liking blog:', error);
+    } catch {
     }
   };
-
-  console.log('comments', comments);
 
   return (
     <article className='min-h-screen bg-readreblack-1 text-white p-6'>

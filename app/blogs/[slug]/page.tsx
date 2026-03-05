@@ -27,8 +27,7 @@ async function getBlogPost(slug: string): Promise<BlogPostData | null> {
     const API_BASE_URL = getApiUrl();
     const res = await axios.get(`${API_BASE_URL}/blogs/${slug}`);
     return res.data;
-  } catch (error) {
-    console.error('Error fetching blog post:', error);
+  } catch {
     return null;
   }
 }

@@ -39,6 +39,7 @@ export default function BlogPost({ postData, params }: BlogPostProps) {
       <header className="text-center py-8">
         <p className="text-readrepurple-5 uppercase">{postData.tag}</p>
         <h1 className="text-4xl font-bold my-4">{postData.title}</h1>
+        <p className="text-readreblack-6 mb-2">By {postData.author || "Unknown"}</p>
         <p className="text-readreblack-4">{formattedDate} | {postData.reading_time} min read</p>
       </header>
 

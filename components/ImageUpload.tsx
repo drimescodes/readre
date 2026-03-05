@@ -26,7 +26,6 @@ const ImageUpload = ({ onImageUpload }: { onImageUpload: (url: string) => void }
             onImageUpload(response.data.image_url);  // Pass the image URL back to the parent component
         } catch (err) {
             setError("Error uploading image");
-            console.error('Error Uploading Image', err);
         } finally {
             setUploading(false);
         }

@@ -4,13 +4,14 @@ import Link from 'next/link';
 interface BlogCardProps {
     title: string;
     slug: string;
+    author?: string;
     category: string;
     date: string;
     readTime: string;
     imageUrl: string;  // Add imageUrl prop
 }
 
-const BlogCard = ({ title, slug, category, date, readTime, imageUrl }: BlogCardProps) => {
+const BlogCard = ({ title, slug, author, category, date, readTime, imageUrl }: BlogCardProps) => {
     return (
         <Link href={`/blogs/${slug}`} passHref>
             <section className="w-[21rem] h-[23rem] sm:w-[22rem] sm:h-[24rem] lg:w-[26rem] lg:h-[26rem] bg-readreblack-2 p-3 rounded-md group overflow-hidden cursor-pointer flex flex-col">
@@ -29,6 +30,7 @@ const BlogCard = ({ title, slug, category, date, readTime, imageUrl }: BlogCardP
                         <p className="text-readrepurple-5 font-semibold line-clamp-1">{category}</p>
                     </div>
                     <p className="pt-4 font-bold text-lg text-white line-clamp-2">{title}</p>
+                    <p className="pt-2 text-readreblack-6 text-sm line-clamp-1">By {author || "Unknown"}</p>
                     <p className="text-readreblack-6 text-sm mt-auto">
                         {date}<span className="pl-6">{readTime}</span>
                     </p>
